@@ -1,6 +1,3 @@
-const div38 = document.getElementById("hello");
-div38.style.backgroundColor = "red"
-
 import * as THREE from 'three';
 
 // THREE.js setup
