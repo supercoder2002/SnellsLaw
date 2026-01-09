@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body {margin: 0;}
+			.horizontal {
+				display: flex;
+				flex-direction: row;
+			}
+			.horizontal .sliderContainer {
+				justify-content: space-evenly;
+			}
+		</style>
+		<script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@v0.182.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.182.0/examples/jsm/"
+            }
+        }
+        </script>
+	</head>
+	<body>
+		<script type="module" src="/src/main.js"></script>
+		<div class="horizontal">
+			<div style="display: flex; flex-direction: column; width: 20%; align-items: center;">
+				<h1>Inputs</h1>
+
+				<h2>Entry</h2>
+
+				<div class="horizontal sliderContainer">
+					<h3>Pitch</h3>
+					<input type="range" min="0" max="100" value="0" id="dirSlider1">
+				</div>
+				<div class="horizontal sliderContainer">
+					<h3>Yaw</h3>
+					<input type="range" min="0" max="100" value="0" id="dirSlider2">
+				</div>
+
+				<h2>Refractive Indices</h2>
+
+				<div class="horizontal sliderContainer">
+					<h3>η</h3>
+					<input type="range" min="1" max="20" value="0" id="iSlider1">
+				</div>
+				<div class="horizontal sliderContainer">
+					<h3>η'</h3>
+					<input type="range" min="1" max="20" value="0" id="iSlider2">
+				</div>
+
+			</div>
+			<div id="THREE"></div>
+		</div>
+    </body>
+</html>
