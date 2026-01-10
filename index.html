@@ -4,54 +4,74 @@
 		<meta charset="utf-8">
 		<title>My first three.js app</title>
 		<style>
-			body {margin: 0;}
+			::-webkit-scrollbar {
+				width: 10px;
+			}
+			::-webkit-scrollbar-thumb {
+				background: gray; 
+				border-radius: 10px;
+			}
+			body {
+				margin: 0;
+			}
 			.horizontal {
 				display: flex;
 				flex-direction: row;
 			}
-			.horizontal .sliderContainer {
+			.horizontal .inputContainer {
 				justify-content: space-evenly;
+				direction: ltr;
 			}
 		</style>
 		<script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@v0.182.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.182.0/examples/jsm/"
-            }
-        }
-        </script>
+		{
+			"imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@v0.182.0/build/three.module.js",
+				"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.182.0/examples/jsm/"
+			}
+		}
+		</script>
 	</head>
 	<body>
 		<script type="module" src="/src/main.js"></script>
 		<div class="horizontal">
-			<div style="display: flex; flex-direction: column; width: 20%; align-items: center;">
-				<h1>Inputs</h1>
+			<div style="direction: rtl; display: flex; overflow-y: scroll; height: 100vh; flex-direction: column; justify-content: space-evenly; width: 20%; align-items: center;">
+				<h2>Inputs</h2>
 
-				<h2>Entry</h2>
-
-				<div class="horizontal sliderContainer">
-					<h3>Pitch</h3>
+				<h3>Entry</h3>
+				<div class="horizontal inputContainer">
+					<h4>Pitch</h4>
 					<input type="range" min="0" max="100" value="0" id="dirSlider1">
 				</div>
-				<div class="horizontal sliderContainer">
-					<h3>Yaw</h3>
+				<div class="horizontal inputContainer">
+					<h4>Yaw</h4>
 					<input type="range" min="0" max="100" value="0" id="dirSlider2">
 				</div>
 
-				<h2>Refractive Indices</h2>
-
-				<div class="horizontal sliderContainer">
-					<h3>η</h3>
+				<h3>Refractive Indices</h3>
+				<div class="horizontal inputContainer">
+					<h4>η</h4>
 					<input type="range" min="1" max="20" value="0" id="iSlider1">
 				</div>
-				<div class="horizontal sliderContainer">
-					<h3>η'</h3>
+				<div class="horizontal inputContainer">
+					<h4>η'</h4>
 					<input type="range" min="1" max="20" value="0" id="iSlider2">
 				</div>
-
+				
+				<h3>Visuals</h3>
+				<div class="horizontal inputContainer">
+					<h4>Collision Plane</h4>
+					<input type="checkbox" id="CPC" checked>
+				</div>
+				<div class="horizontal inputContainer">
+					<h4>Medium Visuals</h4>
+					<input type="checkbox" id="MVC" checked>
+				</div>
 			</div>
 			<div id="THREE"></div>
+		</div>
+	</body>
+</html>
 		</div>
     </body>
 </html>
