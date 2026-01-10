@@ -1,4 +1,4 @@
-import * as THREE from '/three';
+import * as THREE from 'three';
 
 // THREE.js setup
 const scene = new THREE.Scene();
@@ -71,9 +71,21 @@ scene.add(normalPlane);
 // collision plane
 const geometry2 = new THREE.PlaneGeometry(100, 100, 100, 100); 
 const material2 = new THREE.MeshBasicMaterial({ color: 0xff3333, side: THREE.DoubleSide, wireframe: true});
-const collsionPlane = new THREE.Mesh(geometry2, material2);
-collsionPlane.lookAt(new THREE.Vector3().crossVectors(normalDir, entryDir));
-scene.add(collsionPlane);
+const collisionPlane = new THREE.Mesh(geometry2, material2);
+collisionPlane.lookAt(new THREE.Vector3().crossVectors(normalDir, entryDir));
+scene.add(collisionPlane);
+
+const m1Geometry = new THREE.BoxGeometry(100, 50, 1);
+const m1Material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x0000ff, transparent: true, opacity: 0.1});
+const medium1 = new THREE.Mesh(m1Geometry, m1Material);
+medium1.position.copy(new THREE.Vector3(0, 25, 0));
+scene.add(medium1);
+
+const m2Geometry = new THREE.BoxGeometry(100, 50, 1);
+const m2Material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x00ff00, transparent: true, opacity: 0.1});
+const medium2 = new THREE.Mesh(m2Geometry, m2Material);
+medium2.position.copy(new THREE.Vector3(0, -25, 0));
+scene.add(medium2);
 
 /* Other variables (user input) */
 
@@ -85,6 +97,7 @@ var entryRotation2 = 0;
 
 /* Main Loop */
 function animate() {
+	updateCheckBoxInput();
 	renderer.render(scene, camera);
 	camera.position.lerpVectors(camera.position, targetCamPos, 0.5);
 }
@@ -96,6 +109,8 @@ const dirSlider1 = document.getElementById("dirSlider1");
 const dirSlider2 = document.getElementById("dirSlider2");
 const iSlider1 = document.getElementById("iSlider1");
 const iSlider2 = document.getElementById("iSlider2");
+const collisionPlaneBox = document.getElementById("CPC");
+const mediumVisualBox = document.getElementById("MVC");
 
 // slider functions
 dirSlider1.oninput = function() {
@@ -118,6 +133,13 @@ iSlider2.oninput = function() {
 	updateVisualCalc();
 }
 
+function updateCheckBoxInput() {
+	collisionPlane.visible = collisionPlaneBox.checked;
+	medium1.visible = mediumVisualBox.checked;
+	medium2.visible = mediumVisualBox.checked;
+}
+
+
 // updates visuals after user input
 function updateVisualCalc() {
 	entryDir.y = -Math.sin(entryRotation1);
@@ -126,18 +148,28 @@ function updateVisualCalc() {
 	
 	entryArrow.setDirection(entryDir);
 	entryArrow.position.copy(entryDir.clone().multiplyScalar(-10));
-	collsionPlane.lookAt(new THREE.Vector3().crossVectors(normalDir, entryDir));
+	
+	crossDir = new THREE.Vector3().crossVectors(entryDir.clone().negate(), normalDir).normalize();
+	collisionPlane.lookAt(crossDir);
+	crossDir.add(new THREE.Vector3(0, 25, 0));
+	medium1.lookAt(crossDir);
+	crossDir.add(new THREE.Vector3(0, -50, 0));
+	medium2.lookAt(crossDir);
 
 	dotVal = normalDir.dot(entryDir.clone().negate());
 	sinVal = (r1/r2) * Math.sqrt(1 - dotVal * dotVal);
-	cosVal = Math.sqrt(1 - sinVal * sinVal);
-
-	crossDir = new THREE.Vector3().crossVectors(entryDir.clone().negate(), normalDir).normalize();
-	sideDir = new THREE.Vector3().crossVectors(crossDir, normalDir).normalize();
-
-	parallelDir = normalDir.clone().negate().multiplyScalar(cosVal);
-	perpendicularDir = sideDir.clone().multiplyScalar(sinVal);
-	exitDir = new THREE.Vector3().addVectors(parallelDir, perpendicularDir);
+	
+	// Total Internal Reflection (when sinVal is out of range, ray reflects)
+	if (sinVal > 1) {
+		exitDir = new THREE.Vector3().addVectors(normalDir.clone().multiplyScalar(2 * dotVal), entryDir);
+	} else {
+		cosVal = Math.sqrt(1 - sinVal * sinVal);
+		crossDir.add(new THREE.Vector3(0, 25, 0));
+		sideDir = new THREE.Vector3().crossVectors(crossDir, normalDir).normalize();
+		parallelDir = normalDir.clone().negate().multiplyScalar(cosVal);
+		perpendicularDir = sideDir.clone().multiplyScalar(sinVal);
+		exitDir = new THREE.Vector3().addVectors(parallelDir, perpendicularDir);
+	}
 	exitArrow.setDirection(exitDir);
 }
 
